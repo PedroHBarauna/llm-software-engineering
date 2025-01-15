@@ -2,7 +2,7 @@ from llm_adapter import LLMAdapter
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class LocalLLMAdapter(LLMAdapter):
-    def init(self, model_name: str):
+    def __init__(self, model_name: str):
         self.model_name = model_name
         self.model = None
         self.tokenizer = None

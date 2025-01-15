@@ -14,32 +14,40 @@ def main():
         if model_choice == "Local LLM (GPT-NeoX)":
             adapter = LocalLLMAdapter(model_name="EleutherAI/gpt-neo-1.3B")
         elif model_choice == "Online LLM (Sabia 3)":
-            adapter = OnlineLLMAdapter(api_key="")
+            adapter = OnlineLLMAdapter(api_key="105850918713662678369_8fc1a2cda89a24f5")
         else:
             return None
         adapter.load_model()
         return adapter
 
+    def handle_chat(history, model_choice, message):
+        adapter = on_model_select(model_choice)
+        print(message)
+        if adapter:
+            response = adapter.generate_response(message)
+            history.append((message, response))
+            return history, ""
+        else:
+            history.append((message, "Por favor, escolha um modelo primeiro."))
+            return history, ""
+
     with gr.Blocks() as chat_interface:
-        gr.Markdown("### Devolução de Tanques")
+        gr.Markdown("### Chatbot com Seleção de Modelos")
 
-        model_choice = gr.Dropdown(
-            choices=["Local LLM (GPT-NeoX)", "Online LLM (Sabia 3)"],
-            label="Escolha o modelo"
+        with gr.Row():
+            model_choice = gr.Dropdown(
+                choices=["Local LLM (GPT-NeoX)", "Online LLM (Sabia 3)"],
+                label="Escolha o modelo",
+            )
+
+        chatbot = gr.Chatbot(label="Chatbot")
+        message = gr.Textbox(placeholder="Digite sua mensagem...")
+
+        message.submit(
+            handle_chat,
+            inputs=[chatbot, model_choice, message],
+            outputs=[chatbot, message],
         )
-
-        message = gr.Textbox(placeholder="Digite sua mensagem...", label="Sua pergunta:")
-        response = gr.Textbox(label="Resposta:", interactive=False)
-
-        def handle_chat(model_choice, prompt):
-            adapter = on_model_select(model_choice)
-            if adapter:
-                response = adapter.generate_response(prompt)
-                return response
-            else:
-                return "Por favor, escolha um modelo primeiro."
-
-        message.submit(handle_chat, inputs=[model_choice, message], outputs=response)
 
     chat_interface.launch()
 
