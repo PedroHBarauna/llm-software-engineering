@@ -14,7 +14,7 @@ def main():
         if model_choice == "Local LLM (GPT-NeoX)":
             adapter = LocalLLMAdapter(model_name="EleutherAI/gpt-neo-1.3B")
         elif model_choice == "Online LLM (Sabia 3)":
-            adapter = OnlineLLMAdapter(api_key="105850918713662678369_8fc1a2cda89a24f5")
+            adapter = OnlineLLMAdapter(api_key="")
         else:
             return None
         adapter.load_model()
