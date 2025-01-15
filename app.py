@@ -43,5 +43,5 @@ def main():
 
     chat_interface.launch()
 
-if name == "main":
+if __name__ == "__main__":
     main()
